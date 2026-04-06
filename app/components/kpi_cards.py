@@ -42,8 +42,17 @@ def _num(v, decimals=1) -> str:
     return f"{v:,.{decimals}f}"
 
 
+def _card_html(item: dict) -> str:
+    return (
+        f"<div class='kpi-card {item['cls']}'>"
+        f"<div class='kpi-label'>{item['label']}</div>"
+        f"<div class='kpi-value'>{item['value']}</div>"
+        f"<div class='kpi-sub'>{item['sub']}</div>"
+        "</div>"
+    )
+
+
 def render_kpi_cards(kpis: dict):
-    """Render all KPI cards (do not omit any core metric)."""
     items = [
         {
             "label": "Productos Analizados",
@@ -83,18 +92,8 @@ def render_kpi_cards(kpis: dict):
         },
     ]
 
-    html = '<div class="kpi-grid">'
-    for item in items:
-        html += f"""
-        <div class="kpi-card {item['cls']}">
-            <div class="kpi-label">{item['label']}</div>
-            <div class="kpi-value">{item['value']}</div>
-            <div class="kpi-sub">{item['sub']}</div>
-        </div>
-        """
-    html += "</div>"
-
-    st.markdown(html, unsafe_allow_html=True)
+    cards_html = "".join(_card_html(item) for item in items)
+    st.markdown(f"<div class='kpi-grid'>{cards_html}</div>", unsafe_allow_html=True)
 
 
 def render_alerts(kpis: dict):
