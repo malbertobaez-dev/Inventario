@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "inventario-492519",
+  "private_key_id": "50d7b9f470970e5580594153f0e07a67fc9c03b0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCfuJxGDJP8ADbx\nN4Pleorc+qUlTbIZGoUnx6XOTIz75VofmrcxkzVtt00PvujtBt7rnhA1rowdeD3l\nEjnmP9BnJnYHJPz3Wi4YYUjarOE48em7hS1ZKyjgqc//PGfW6ce3fQhk2CvjkDXE\nQuCp6GEHJm29kHy+RgtYOiREqOJplpjXae+i4krziB6zR2BDuEeQUjV11KSAwIFr\n4vK0Pv4MoDWMGLuMw9I0NMoHzKeKLsEs4qqMwHCKG++aHSZhE6Mt9yAZBvA3GNyJ\nIJJKs3NZpZ+E2N0h2tnKaGe5q/MODntyBDyzbUILErY2N+/jMUEn0lOPiyyQDLGl\nZ9puNGjJAgMBAAECggEACaC4ttZCQ2IF7dNxXW9eGIT5WH7O+glptmSn/4AIzZRd\nMuOCIHhls5flisnww3zzChPsmTfM1WfunzTSjakSGG2ulq6pmwVyGuEeYaQjLWoT\ns0yLV8EsxSInWhTbk45jDhH45A9N0fla7Fo1rbhGxQYRfmhLxLJ3M5nJnuPpRgEI\nDNk07x4HI5aAJk9LgsGglxMUHChQoni7+YbJsi1OGeNr9ycds2Y5u7Cdmrvx7q3j\nSvuZGsXpsBdtDX5q6s9YT8i9zFw/9TZmQ9l3LiPT4mYSIpN+ULO26c0bPe4kmcr0\nF1nvAUK3WeKXRncOLgxEWQPPNlwK8s/njckTGPhSYwKBgQDT7Gi+CvGvw65ogbRS\nA6Qqq02tAiRnN9lisgSHg5Nk0pD76ASh0ce3rc6lqhq8mGcXi6/Wyl+d0IL9z6Y7\n7TASmWU8YTpEQoLgh0xrgMRrYzqyVkwrLR5AVKkpVx89fY1tvYW1gSpLN1ThbCr9\nz6MwN5fizTb8C+UbNPk84I6bNwKBgQDA8MFgv5GXCDcLIP0dmuO3PV08IeGAmGxb\nM6WjR0k+XKmHK+4zbGKDtDlHsVnfoOLp46CpKQ5EnTTyHr3IUdnWK1P/k4HeogmX\nrXlcsnmTd2in/wqcwMvJvIJsnmbUm9dHrtrZB1Djq+ysL+4fdqP52cOk0QW6EVXM\n0/3utv8b/wKBgF5VzSZTjtRTwe5JVnBvqINJ7/DElFnSFZWGctez7UejJ+DKnk0+\nKa4M04ERIIe1O6bSinqNaVTBvZ2n8nKYmZ6d49+l1B8QkFvMPmtYTZcT+8vo+Ez7\n74xpY0fAvWpM2kjwZXWvQplqzwDtepGy/Qx4osbV3NUDon+i7BN6TmCvAoGARzZV\nWZ07YlBg6JWjdtLda5uVlwU2Ux1vGPZmE27TRNY0qDR5tbcyYUQaxDBcaKLcPdGL\nUgRaRM71ZMwd5hr32Qmi9jj+fSq3ealImwMwxlITabZDt3mdffc6+FY6xAxFGCsc\nkXAW1gF12FPUgv5qJWTPxjxz7apKTdCM8BfQ7wcCgYALGMmnh78ypv6l451dFw6U\nb5N+qSvfUtSEIMf6kIzvQ1d4r4dRsGlSKQRoyGp8hARB64D939smsj0ApXq9KdCd\nVOrz+nDidWCElh5qM7mH4kWx9NQLyc3enw6+8VFTIkbRIkrasEnIfKKhFOAvquav\nrV52tHJBt8oz5Q5ib+NrwQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "inventario-app@inventario-492519.iam.gserviceaccount.com",
+  "client_id": "104476324059754734330",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/inventario-app%40inventario-492519.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
