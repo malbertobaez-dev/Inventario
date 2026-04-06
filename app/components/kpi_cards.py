@@ -1,95 +1,135 @@
 """
-KPI Cards — Render dashboard metric cards with traffic-light indicators.
+KPI Cards — Premium styled cards with traffic-light borders and monospace values.
 """
 import streamlit as st
+import sys, os
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from config.settings import THRESHOLDS
+
+
+def _get_card_class(value, key: str) -> str:
+    """Return CSS class based on KPI threshold."""
+    if value is None:
+        return "gray"
+    t = THRESHOLDS.get(key, {})
+    green = t.get("green")
+    yellow = t.get("yellow")
+    if green is None:
+        return "gray"
+    if value <= green:
+        return "green"
+    if value <= yellow:
+        return "yellow"
+    return "red"
+
+
+def _mxn(v) -> str:
+    if v is None:
+        return "$0"
+    return f"${v:,.0f}"
+
+
+def _pct(v) -> str:
+    if v is None:
+        return "0%"
+    return f"{v:.1f}%"
+
+
+def _num(v, decimals=1) -> str:
+    if v is None:
+        return "—"
+    return f"{v:,.{decimals}f}"
 
 
 def render_kpi_cards(kpis: dict):
-    """Render the main KPI card grid."""
+    """Render KPI cards using custom HTML grid."""
+    items = [
+        {
+            "label": "Productos Analizados",
+            "value": f"{kpis.get('total_products', 0):,}",
+            "sub": "Items en período",
+            "cls": "gray",
+        },
+        {
+            "label": "Costo Exceso Total",
+            "value": _mxn(kpis.get("total_excess_cost")),
+            "sub": "Inventario inmovilizado en MXN",
+            "cls": _get_card_class(kpis.get("total_excess_cost", 0), "excess_cost"),
+        },
+        {
+            "label": "Sin Ventas en Período",
+            "value": f"{kpis.get('zero_sales_count', 0):,}",
+            "sub": _pct(kpis.get("zero_sales_pct")) + " del total",
+            "cls": _get_card_class(kpis.get("zero_sales_pct", 0), "zero_sales_pct"),
+        },
+        {
+            "label": "Mediana Meses de Inv",
+            "value": _num(kpis.get("median_months_inventory")),
+            "sub": "meses de cobertura",
+            "cls": _get_card_class(kpis.get("median_months_inventory", 0), "meses_inventario"),
+        },
+        {
+            "label": "Costo Existencia Total",
+            "value": _mxn(kpis.get("total_exist_cost")),
+            "sub": "Valor de inventario activo",
+            "cls": "gray",
+        },
+        {
+            "label": "Ratio Exceso / Exist",
+            "value": _pct(kpis.get("excess_ratio", 0) * 100),
+            "sub": "Proporción de exceso",
+            "cls": _get_card_class(kpis.get("excess_ratio", 0), "excess_ratio"),
+        },
+    ]
 
-    def _tl_class(tl: str) -> str:
-        return {"🟢": "green", "🟡": "yellow", "🔴": "red"}.get(tl, "gray")
-
-    def _card(label: str, value, sub: str = "", tl: str = "⚪"):
-        cls = _tl_class(tl)
-        return f"""
+    cards_html = '<div class="kpi-grid">'
+    for item in items:
+        cls = item["cls"]
+        cards_html += f"""
         <div class="kpi-card {cls}">
-            <div class="kpi-label">{label}</div>
-            <div class="kpi-value">{tl} {value}</div>
-            <div class="kpi-sub">{sub}</div>
+            <div class="kpi-label">
+                <span class="kpi-dot {cls}"></span>
+                {item["label"]}
+            </div>
+            <div class="kpi-value">{item["value"]}</div>
+            <div class="kpi-sub">{item["sub"]}</div>
         </div>
         """
-
-    # Format values
-    excess_cost = kpis.get("total_excess_cost", 0)
-    if excess_cost >= 1_000_000:
-        excess_str = f"${excess_cost / 1_000_000:,.1f}M"
-    elif excess_cost >= 1_000:
-        excess_str = f"${excess_cost / 1_000:,.0f}K"
-    else:
-        excess_str = f"${excess_cost:,.0f}"
-
-    months = kpis.get("avg_months_inventory")
-    months_str = f"{months} meses" if months else "N/D"
-
-    zero_pct = kpis.get("zero_sales_pct", 0)
-    excess_ratio = kpis.get("avg_excess_ratio", 0)
-    family_conc = kpis.get("family_concentration", 0)
-    aging = kpis.get("aging_days")
-
-    cards_html = f"""
-    <div class="kpi-grid">
-        {_card("Productos Analizados", f'{kpis.get("total_products", 0):,}',
-               f'{kpis.get("total_stock_units", 0):,} unidades en stock')}
-
-        {_card("Mediana Meses Inventario", months_str,
-               "Cobertura de inventario",
-               kpis.get("avg_months_tl", "⚪"))}
-
-        {_card("Costo Exceso Total", excess_str,
-               f'{kpis.get("total_excess_units", 0):,} unidades exceso',
-               kpis.get("excess_cost_tl", "⚪"))}
-
-        {_card("Productos Sin Ventas", f'{zero_pct}%',
-               f'{kpis.get("zero_sales_count", 0)} de {kpis.get("total_products", 0)}',
-               kpis.get("zero_sales_tl", "⚪"))}
-
-        {_card("Ratio de Exceso", f'{excess_ratio:.1%}',
-               "Mediana exceso/existencia",
-               kpis.get("excess_ratio_tl", "⚪"))}
-
-        {_card("Concentración por Familia", f'{family_conc:.0%}',
-               f'Mayor: {kpis.get("top_family", "N/A")}',
-               kpis.get("family_conc_tl", "⚪"))}
-    </div>
-    """
+    cards_html += "</div>"
 
     st.markdown(cards_html, unsafe_allow_html=True)
+    # spacer so Streamlit doesn't clip
+    st.write("")
 
 
 def render_alerts(kpis: dict):
-    """Render alert banners based on KPI traffic lights."""
+    """Render alert banners for critical KPI conditions."""
     alerts = []
 
-    if kpis.get("excess_cost_tl") == "🔴":
-        cost = kpis.get("total_excess_cost", 0)
-        alerts.append(("danger", f"🚨 Costo de exceso crítico: ${cost:,.0f} MXN — requiere acción inmediata"))
+    excess_cost = kpis.get("total_excess_cost", 0) or 0
+    if excess_cost >= 200_000:
+        alerts.append(("danger", f"⚠️ Costo de exceso crítico: <strong>{_mxn(excess_cost)}</strong> — Requiere acción inmediata."))
 
-    if kpis.get("zero_sales_tl") == "🔴":
-        pct = kpis.get("zero_sales_pct", 0)
-        alerts.append(("danger", f"🚨 {pct}% de productos sin ventas — revisar obsolescencia"))
+    zero_pct = kpis.get("zero_sales_pct", 0) or 0
+    if zero_pct >= 15:
+        alerts.append(("warning", f"⚠️ {_pct(zero_pct)} de productos sin ventas en el período — Evaluar liquidación."))
 
-    if kpis.get("avg_months_tl") == "🔴":
-        months = kpis.get("avg_months_inventory", 0)
-        alerts.append(("warning", f"⚠️ Mediana de {months} meses de inventario — riesgo de lento movimiento"))
+    median_months = kpis.get("median_months_inventory", 0) or 0
+    if median_months >= 12:
+        alerts.append(("danger", f"📅 Mediana de {_num(median_months)} meses de inventario — Cobertura excesiva detectada."))
+    elif median_months >= 6:
+        alerts.append(("warning", f"📅 Mediana de {_num(median_months)} meses de inventario — Monitorear tendencia."))
 
-    if kpis.get("family_conc_tl") == "🔴":
-        family = kpis.get("top_family", "")
-        pct = kpis.get("family_concentration", 0)
-        alerts.append(("warning", f"⚠️ Familia '{family}' concentra {pct:.0%} del exceso — diversificar acciones"))
+    excess_ratio = kpis.get("excess_ratio", 0) or 0
+    if excess_ratio >= 0.5:
+        alerts.append(("danger", f"📦 Ratio exceso/existencia: <strong>{_pct(excess_ratio * 100)}</strong> — Más de la mitad del inventario en exceso."))
 
     if not alerts:
-        alerts.append(("success", "✅ Indicadores dentro de parámetros aceptables"))
+        alerts.append(("success", "✅ KPIs dentro de rangos normales — Sin alertas críticas."))
 
-    for level, msg in alerts:
-        st.markdown(f'<div class="alert-banner {level}">{msg}</div>', unsafe_allow_html=True)
+    html = ""
+    for cls, msg in alerts:
+        html += f'<div class="alert-banner {cls}">{msg}</div>'
+
+    st.markdown(html, unsafe_allow_html=True)

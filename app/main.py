@@ -36,7 +36,14 @@ PAGES = {
 }
 
 st.sidebar.markdown(
-    "<h2 style='color:#FFCC00; font-weight:800; margin-bottom:0.5rem;'>⚡ Inventario</h2>",
+    """
+    <div style='padding: 0.75rem 0 1rem 0; border-bottom: 1px solid rgba(255,204,0,0.25); margin-bottom: 0.75rem;'>
+        <div style='font-family: Montserrat, sans-serif; font-size: 1.25rem; font-weight: 900;
+                    color: #FFCC00; letter-spacing: -0.5px; line-height: 1.1;'>⚡ Inventario</div>
+        <div style='font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 0.2rem;
+                    font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase;'>Slow Movement Dashboard</div>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 

@@ -12,8 +12,19 @@ from config.settings import COLOR_PRIMARY, COLOR_SECONDARY, COLOR_ACCENT, COLOR_
 
 
 CHART_TEMPLATE = "plotly_white"
-CHART_COLORS = [COLOR_PRIMARY, COLOR_SECONDARY, COLOR_ACCENT, "#FF6B6B",
-                "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7", "#DDA0DD", "#F0E68C"]
+CHART_COLORS = [
+    "#0070EA", "#002D5A", "#FFCC00", "#E6A817",
+    "#28A745", "#DC3545", "#6C757D", "#17A2B8",
+    "#6F42C1", "#FD7E14",
+]
+
+_LAYOUT_BASE = dict(
+    font=dict(family="Inter", size=12),
+    paper_bgcolor="#FFFFFF",
+    plot_bgcolor="#FFFFFF",
+    margin=dict(l=10, r=10, t=30, b=10),
+    hoverlabel=dict(font_family="Inter"),
+)
 
 
 def chart_family_excess_cost(df: pd.DataFrame):

@@ -12,7 +12,11 @@ def render_filters(families: list) -> dict:
     """
     Render sidebar filters and return selected values.
     """
-    st.sidebar.markdown("### 🔍 Filtros")
+    st.sidebar.markdown(
+        "<div style='color:rgba(255,204,0,0.9); font-size:0.8rem; font-weight:700; "
+        "letter-spacing:1px; text-transform:uppercase; margin-bottom:0.5rem;'>🔍 Filtros</div>",
+        unsafe_allow_html=True,
+    )
 
     # Time window
     window_label = st.sidebar.selectbox(
@@ -44,8 +48,8 @@ def render_filters(families: list) -> dict:
 
     st.sidebar.markdown("---")
     st.sidebar.markdown(
-        f"<div style='font-size:0.75rem; opacity:0.6; text-align:center;'>"
-        f"Inventario Slow Movement v1.0</div>",
+        "<div style='font-size:0.72rem; color:rgba(255,255,255,0.4); "
+        "text-align:center; margin-top:0.5rem;'>Inventario v1.0</div>",
         unsafe_allow_html=True,
     )
 

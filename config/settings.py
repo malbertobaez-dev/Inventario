@@ -28,8 +28,10 @@ COLOR_ACCENT = "#FFCC00"        # Energy Yellow
 COLOR_NEUTRAL = "#F4F4F4"       # Technical Gray
 COLOR_WHITE = "#FFFFFF"
 COLOR_DARK_TEXT = "#1A1A2E"
+COLOR_BG_MAIN = "#F0F2F5"       # Main content background
+COLOR_CARD_BG = "#FFFFFF"       # Card / panel background
 COLOR_SUCCESS = "#28A745"
-COLOR_WARNING = "#FFC107"
+COLOR_WARNING = "#E6A817"
 COLOR_DANGER = "#DC3545"
 
 # ── KPI Thresholds ────────────────────────────────────────────────
