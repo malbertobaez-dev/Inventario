@@ -343,11 +343,11 @@ section[data-testid="stSidebar"] .stButton > button {
 .login-shell {
   max-width: 560px;
   margin: 7rem auto 0 auto;
-  background: linear-gradient(180deg, rgba(24,31,40,0.85), rgba(18,24,34,0.98));
-  border: 1px solid rgba(48,63,79,0.7);
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.35);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0.5rem 0;
+  box-shadow: none;
 }
 
 .login-logo-wrap {
