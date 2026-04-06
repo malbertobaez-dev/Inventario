@@ -48,10 +48,6 @@ if not user:
     render_login_gate(auth_url, auth_error=auth_url_error or get_auth_error())
     st.stop()
 
-if render_topbar(user):
-    logout_user()
-    st.rerun()
-
 # Initialize DB only for authenticated users
 init_db()
 
@@ -65,12 +61,12 @@ PAGES = {
 
 st.sidebar.markdown(
     f"""
-    <div style='padding:0.5rem 0 1rem 0; border-bottom:1px solid #e5e7eb; margin-bottom:0.75rem;'>
-        <div style='font-family:Montserrat, sans-serif; font-size:1.25rem; font-weight:900; color:#001836; line-height:1.1;'>
-            Inventory<br/>Control
+    <div style='padding:0.52rem 0 .95rem 0; border-bottom:1px solid rgba(82,102,129,.45); margin-bottom:0.72rem;'>
+        <div style='font-family:Montserrat, sans-serif; font-size:1.1rem; font-weight:900; color:#EFF6FF; line-height:1.06; letter-spacing:0.06em; text-transform:uppercase;'>
+            Sentinel<br/>Inventory
         </div>
-        <div style='font-size:0.63rem; color:#6b7280; margin-top:0.2rem; letter-spacing:0.18em; text-transform:uppercase;'>
-            Precision Logistics
+        <div style='font-size:0.6rem; color:#87A0BD; margin-top:0.24rem; letter-spacing:0.2em; text-transform:uppercase;'>
+            Executive Command
         </div>
         <div class='user-chip' style='margin-top:0.6rem;'>
             {user.get("email", "usuario")}
@@ -91,6 +87,16 @@ if st.sidebar.button("Sign Out", key="sidebar_logout", use_container_width=True)
     st.rerun()
 
 page_key = PAGES[selected_page]
+
+active_nav = "Overview"
+if page_key in ("rankings", "trends", "data_explorer"):
+    active_nav = "Risk Analytics"
+elif page_key == "upload":
+    active_nav = "Optimization"
+
+if render_topbar(user, active_nav):
+    logout_user()
+    st.rerun()
 
 families = get_families() if db_exists() else []
 filters = {}

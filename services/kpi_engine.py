@@ -59,6 +59,10 @@ def calc_kpi_summary(df: pd.DataFrame) -> dict:
     if pd.isna(total_excess_cost):
         total_excess_cost = 0
 
+    total_exist_cost = df["costo_exist_mn"].sum() if "costo_exist_mn" in df.columns else 0
+    if pd.isna(total_exist_cost):
+        total_exist_cost = 0
+
     # K3: Zero-Sales Products percentage
     total_products = len(df)
     zero_sales = len(df[df["ventas_periodo"].fillna(0) == 0]) if "ventas_periodo" in df.columns else 0
@@ -99,6 +103,7 @@ def calc_kpi_summary(df: pd.DataFrame) -> dict:
         "total_products": total_products,
         "total_excess_units": int(df["exceso"].sum()) if "exceso" in df.columns else 0,
         "total_stock_units": int(df["existencia"].sum()) if "existencia" in df.columns else 0,
+        "total_exist_cost": round(total_exist_cost, 2),
         # K1
         "avg_months_inventory": round(avg_months, 1) if avg_months else None,
         "avg_months_tl": traffic_light(avg_months, "meses_inventario"),
@@ -130,7 +135,7 @@ def calc_kpi_summary(df: pd.DataFrame) -> dict:
 
 def _empty_kpis() -> dict:
     return {
-        "total_products": 0, "total_excess_units": 0, "total_stock_units": 0,
+        "total_products": 0, "total_excess_units": 0, "total_stock_units": 0, "total_exist_cost": 0,
         "avg_months_inventory": None, "avg_months_tl": "⚪", "avg_months_color": "#6c757d",
         "total_excess_cost": 0, "excess_cost_tl": "⚪", "excess_cost_color": "#6c757d",
         "zero_sales_count": 0, "zero_sales_pct": 0, "zero_sales_tl": "⚪", "zero_sales_color": "#6c757d",
