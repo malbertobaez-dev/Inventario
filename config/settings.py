@@ -3,9 +3,11 @@ Application configuration and brand constants.
 """
 import os
 from pathlib import Path
-from dotenv import load_dotenv
-
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # dotenv is optional
 
 # ── Paths ──────────────────────────────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent.parent
