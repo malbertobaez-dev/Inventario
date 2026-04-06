@@ -18,6 +18,7 @@ except ImportError:  # pragma: no cover - handled at runtime
 
 AUTH_USER_KEY = "auth_user"
 AUTH_ERROR_KEY = "auth_error"
+AUTH_OAUTH_URL_KEY = "auth_oauth_url"
 
 
 def _response_get(payload: Any, key: str) -> Any:
@@ -43,7 +44,11 @@ def get_supabase_client() -> Optional[Client]:
     return _build_supabase_client()
 
 
-def build_google_oauth_url() -> Tuple[Optional[str], Optional[str]]:
+def build_google_oauth_url(force_refresh: bool = False) -> Tuple[Optional[str], Optional[str]]:
+    cached_url = st.session_state.get(AUTH_OAUTH_URL_KEY)
+    if cached_url and not force_refresh:
+        return str(cached_url), None
+
     client = get_supabase_client()
     if client is None:
         return None, "Supabase no esta configurado en variables de entorno."
@@ -72,6 +77,7 @@ def build_google_oauth_url() -> Tuple[Optional[str], Optional[str]]:
     if not url:
         return None, "Supabase no devolvio URL de autenticacion."
 
+    st.session_state[AUTH_OAUTH_URL_KEY] = str(url)
     return str(url), None
 
 
@@ -117,9 +123,21 @@ def handle_oauth_callback() -> None:
         else:
             st.session_state[AUTH_USER_KEY] = normalized_user
             st.session_state.pop(AUTH_ERROR_KEY, None)
+            st.session_state.pop(AUTH_OAUTH_URL_KEY, None)
 
     except Exception as exc:  # pragma: no cover - external API
-        st.session_state[AUTH_ERROR_KEY] = f"Error en callback OAuth: {exc}"
+        msg = str(exc)
+        msg_lower = msg.lower()
+        if "code challenge" in msg_lower or "code verifier" in msg_lower:
+            # Reset PKCE flow so the next login attempt starts with a new verifier/challenge pair.
+            st.session_state.pop(AUTH_OAUTH_URL_KEY, None)
+            _build_supabase_client.clear()
+            st.session_state[AUTH_ERROR_KEY] = (
+                "Error en callback OAuth: la sesion de login expiro o se regenero el challenge. "
+                "Intenta entrar con Google nuevamente."
+            )
+        else:
+            st.session_state[AUTH_ERROR_KEY] = f"Error en callback OAuth: {msg}"
 
     st.query_params.clear()
     st.rerun()
@@ -152,6 +170,7 @@ def logout_user() -> None:
 
     st.session_state.pop(AUTH_USER_KEY, None)
     st.session_state.pop(AUTH_ERROR_KEY, None)
+    st.session_state.pop(AUTH_OAUTH_URL_KEY, None)
 
 
 def get_auth_error() -> Optional[str]:

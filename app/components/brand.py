@@ -4,7 +4,9 @@ Brand styling and shared UI helpers for Streamlit.
 
 from __future__ import annotations
 
+import base64
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, Optional
 
 import streamlit as st
@@ -348,6 +350,22 @@ section[data-testid="stSidebar"] .stButton > button {
   box-shadow: 0 24px 55px rgba(0, 0, 0, 0.35);
 }
 
+.login-logo-wrap {
+  width: 100%;
+  min-height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-company-logo {
+  max-width: 360px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,.35));
+}
+
 .login-title {
   font-family: 'Montserrat', sans-serif;
   color: #f8fbff;
@@ -402,12 +420,43 @@ def inject_brand() -> None:
     st.markdown(BRAND_CSS, unsafe_allow_html=True)
 
 
+def _find_login_logo_path() -> Optional[Path]:
+    base_dir = Path(__file__).resolve().parents[2]
+    candidates = [
+        base_dir / "assets" / "Battery_Depot_LogoBlanco.png",
+        base_dir / "Battery_Depot_LogoBlanco.png",
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return None
+
+
+def _image_to_data_uri(image_path: Path) -> str:
+    suffix = image_path.suffix.lower()
+    mime = "image/png" if suffix == ".png" else "image/jpeg"
+    encoded = base64.b64encode(image_path.read_bytes()).decode("ascii")
+    return f"data:{mime};base64,{encoded}"
+
+
 def render_login_gate(auth_url: Optional[str], auth_error: Optional[str] = None) -> None:
+    logo_path = _find_login_logo_path()
+    logo_html = ""
+    if logo_path is not None:
+        logo_src = _image_to_data_uri(logo_path)
+        logo_html = f"<img src='{logo_src}' alt='Company logo' class='login-company-logo'/>"
+    else:
+        logo_html = (
+            "<div>"
+            "<h1 class='login-title'>SENTINEL INVENTORY</h1>"
+            "<p class='login-sub'>Coloca tu logo en <code>assets/Battery_Depot_LogoBlanco.png</code>.</p>"
+            "</div>"
+        )
+
     st.markdown(
-        """
+        f"""
         <div class="login-shell">
-            <h1 class="login-title">SENTINEL INVENTORY</h1>
-            <p class="login-sub">Accede con Google para abrir el centro de comando de riesgo y KPIs operativos.</p>
+            <div class="login-logo-wrap">{logo_html}</div>
         </div>
         """,
         unsafe_allow_html=True,
