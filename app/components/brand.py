@@ -1,14 +1,29 @@
 """
-Brand styling — CSS injection and theme constants for Streamlit.
+Brand styling and shared UI helpers for Streamlit.
 """
 
-import sys, os
+from __future__ import annotations
+
+from datetime import datetime
+from typing import Any, Dict, Optional
+
+import streamlit as st
+
+import sys
+import os
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from config.settings import (
-    COLOR_PRIMARY, COLOR_SECONDARY, COLOR_ACCENT,
-    COLOR_NEUTRAL, COLOR_WHITE, COLOR_DARK_TEXT,
-    COLOR_SUCCESS, COLOR_WARNING, COLOR_DANGER,
-    COLOR_BG_MAIN, COLOR_CARD_BG,
+    COLOR_ACCENT,
+    COLOR_BG_MAIN,
+    COLOR_CARD_BG,
+    COLOR_DANGER,
+    COLOR_DARK_TEXT,
+    COLOR_PRIMARY,
+    COLOR_SECONDARY,
+    COLOR_SUCCESS,
+    COLOR_WARNING,
+    COLOR_WHITE,
 )
 
 
@@ -16,76 +31,109 @@ BRAND_CSS = f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
-/* ── Reset & Global ──────────────────────────────────────────── */
-.stApp {{
-    font-family: 'Inter', sans-serif;
-    background-color: {COLOR_BG_MAIN};
-}}
-
-.main .block-container {{
-    max-width: 1400px;
-    padding-top: 0.5rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
-}}
-
-/* ── Hide Streamlit chrome ───────────────────────────────────── */
 #MainMenu, footer, header {{ visibility: hidden; }}
 .stDeployButton {{ display: none; }}
 
-/* ── Dashboard Header ────────────────────────────────────────── */
+.stApp {{
+    font-family: 'Inter', sans-serif;
+    background: {COLOR_BG_MAIN};
+    color: {COLOR_DARK_TEXT};
+}}
+
+.main .block-container {{
+    max-width: 1500px;
+    padding-top: 1rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}}
+
+section[data-testid="stSidebar"] {{
+    background: #f6f7f9;
+    border-right: 1px solid #d9dde3;
+}}
+
+section[data-testid="stSidebar"] > div {{
+    padding-top: 0.6rem;
+}}
+
+section[data-testid="stSidebar"] .stMarkdown,
+section[data-testid="stSidebar"] .stMarkdown p {{
+    color: #1f2937;
+}}
+
+section[data-testid="stSidebar"] .stRadio > div > label {{
+    background: transparent;
+    border-radius: 6px;
+    padding: 0.55rem 0.75rem !important;
+    margin-bottom: 0.1rem;
+    color: #111827 !important;
+    transition: all 0.15s ease;
+}}
+
+section[data-testid="stSidebar"] .stRadio > div > label:hover {{
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+}}
+
+section[data-testid="stSidebar"] .stButton > button {{
+    border-radius: 8px;
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    background: #fff;
+    font-weight: 600;
+}}
+
+.topbar-shell {{
+    background: #ffffff;
+    border: 1px solid #dce2ea;
+    border-radius: 14px;
+    padding: 0.6rem 0.9rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}}
+
+.topbar-title {{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #001836;
+    margin: 0;
+}}
+
+.topbar-sub {{
+    font-size: 0.72rem;
+    color: #6b7280;
+    margin-top: 0.15rem;
+}}
+
 .dashboard-header {{
-    background: linear-gradient(135deg, {COLOR_PRIMARY} 0%, #003A72 60%, #004B8D 100%);
-    color: {COLOR_WHITE};
-    padding: 1.75rem 2.5rem;
-    margin-bottom: 1.75rem;
-    border-bottom: 3px solid {COLOR_ACCENT};
-    position: relative;
-    overflow: hidden;
-}}
-
-.dashboard-header::before {{
-    content: '';
-    position: absolute;
-    top: -40px; right: -40px;
-    width: 200px; height: 200px;
-    border-radius: 50%;
-    background: rgba(255,204,0,0.06);
-}}
-
-.dashboard-header::after {{
-    content: '';
-    position: absolute;
-    bottom: -60px; right: 80px;
-    width: 280px; height: 280px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.03);
+    background: #ffffff;
+    border: 1px solid #dce2ea;
+    border-left: 4px solid {COLOR_PRIMARY};
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
 }}
 
 .dashboard-header h1 {{
     font-family: 'Montserrat', sans-serif;
-    font-size: 1.9rem;
+    font-size: 1.2rem;
     font-weight: 800;
-    margin: 0 0 0.3rem 0;
-    letter-spacing: -0.5px;
-    position: relative;
+    margin: 0;
+    color: #0b1f42;
 }}
 
 .dashboard-header p {{
-    font-size: 0.9rem;
-    opacity: 0.75;
-    margin: 0;
-    font-weight: 300;
-    letter-spacing: 0.3px;
-    position: relative;
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 0.3rem 0 0 0;
 }}
 
-/* ── KPI Cards ───────────────────────────────────────────────── */
 .kpi-grid {{
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.75rem;
+    gap: 0.9rem;
+    margin-bottom: 1.25rem;
 }}
 
 @media (max-width: 1200px) {{
@@ -99,321 +147,241 @@ BRAND_CSS = f"""
 .kpi-card {{
     background: {COLOR_CARD_BG};
     border-radius: 8px;
-    padding: 1.1rem 1.25rem 0.9rem 1.1rem;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04);
-    border-left: 4px solid #CBD5E0;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
-    position: relative;
+    padding: 1rem;
+    border: 1px solid #e6e9ee;
+    border-left: 3px solid #cbd5e1;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
 }}
 
-.kpi-card:hover {{
-    box-shadow: 0 4px 20px rgba(0,45,90,0.12);
-    transform: translateY(-2px);
-}}
-
-.kpi-card.green  {{ border-left-color: {COLOR_SUCCESS}; }}
+.kpi-card.green {{ border-left-color: {COLOR_SUCCESS}; }}
 .kpi-card.yellow {{ border-left-color: {COLOR_WARNING}; }}
-.kpi-card.red    {{ border-left-color: {COLOR_DANGER}; }}
-.kpi-card.gray   {{ border-left-color: #CBD5E0; }}
+.kpi-card.red {{ border-left-color: {COLOR_DANGER}; }}
+.kpi-card.gray {{ border-left-color: #9ca3af; }}
 
 .kpi-dot {{
     display: inline-block;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    margin-right: 0.4rem;
-    vertical-align: middle;
-    flex-shrink: 0;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    margin-right: 0.35rem;
 }}
-.kpi-dot.green  {{ background: {COLOR_SUCCESS}; box-shadow: 0 0 6px rgba(40,167,69,0.5); }}
-.kpi-dot.yellow {{ background: {COLOR_WARNING}; box-shadow: 0 0 6px rgba(230,168,23,0.5); }}
-.kpi-dot.red    {{ background: {COLOR_DANGER};  box-shadow: 0 0 6px rgba(220,53,69,0.5); }}
-.kpi-dot.gray   {{ background: #CBD5E0; }}
+
+.kpi-dot.green {{ background: {COLOR_SUCCESS}; }}
+.kpi-dot.yellow {{ background: {COLOR_WARNING}; }}
+.kpi-dot.red {{ background: {COLOR_DANGER}; }}
+.kpi-dot.gray {{ background: #9ca3af; }}
 
 .kpi-label {{
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: #64748B;
+    font-size: 0.63rem;
+    font-weight: 700;
+    color: #6b7280;
     text-transform: uppercase;
-    letter-spacing: 0.7px;
+    letter-spacing: 1px;
     margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
 }}
 
 .kpi-value {{
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.55rem;
+    font-size: 1.6rem;
     font-weight: 600;
-    color: {COLOR_DARK_TEXT};
+    color: #0b1f42;
     line-height: 1.1;
-    margin-bottom: 0.3rem;
 }}
 
 .kpi-sub {{
-    font-size: 0.72rem;
-    color: #94A3B8;
-    margin-top: 0.2rem;
-    font-weight: 400;
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-top: 0.3rem;
 }}
 
-/* ── Section Headers ─────────────────────────────────────────── */
 .section-header {{
     font-family: 'Montserrat', sans-serif;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: {COLOR_PRIMARY};
-    margin: 1.5rem 0 0.85rem 0;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid {COLOR_ACCENT};
-    letter-spacing: -0.2px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #07234a;
+    margin: 1rem 0 0.7rem 0;
+    padding-bottom: 0.45rem;
+    border-bottom: 2px solid #e5e7eb;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
 }}
 
-/* ── Alert Banners ───────────────────────────────────────────── */
 .alert-banner {{
-    padding: 0.75rem 1.1rem;
-    border-radius: 6px;
-    margin-bottom: 0.6rem;
-    font-size: 0.875rem;
+    padding: 0.65rem 0.9rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    font-size: 0.82rem;
     font-weight: 500;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
     border-left: 4px solid transparent;
 }}
 
 .alert-banner.danger {{
-    background: #FFF5F5;
+    background: #fff5f5;
     border-left-color: {COLOR_DANGER};
-    color: #9B1C1C;
+    color: #991b1b;
 }}
 
 .alert-banner.warning {{
-    background: #FFFBEB;
+    background: #fffbeb;
     border-left-color: {COLOR_WARNING};
-    color: #78350F;
+    color: #78350f;
 }}
 
 .alert-banner.success {{
-    background: #F0FDF4;
+    background: #f0fdf4;
     border-left-color: {COLOR_SUCCESS};
-    color: #14532D;
+    color: #14532d;
 }}
 
-/* ── Upload Zone ─────────────────────────────────────────────── */
 .upload-zone {{
-    border: 2px dashed {COLOR_SECONDARY};
-    border-radius: 8px;
-    padding: 2.5rem 2rem;
+    border: 1px dashed #93c5fd;
+    border-radius: 10px;
+    padding: 1.8rem;
     text-align: center;
-    background: linear-gradient(135deg, #F8FBFF 0%, #EEF4FF 100%);
-    margin: 1rem 0;
-    transition: border-color 0.2s ease;
+    background: linear-gradient(135deg, #f8fbff 0%, #eef4ff 100%);
+    margin: 0.8rem 0 1rem 0;
 }}
 
-.upload-zone:hover {{
-    border-color: {COLOR_ACCENT};
+[data-testid="stDataFrame"] {{
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
 }}
 
-/* ── Sidebar ─────────────────────────────────────────────────── */
-section[data-testid="stSidebar"] {{
-    background: linear-gradient(180deg, {COLOR_PRIMARY} 0%, #001E40 100%);
-    border-right: 1px solid rgba(255,204,0,0.15);
-}}
-
-section[data-testid="stSidebar"] > div {{
-    padding-top: 1rem;
-}}
-
-section[data-testid="stSidebar"] .stMarkdown,
-section[data-testid="stSidebar"] .stMarkdown p {{
-    color: {COLOR_WHITE};
-}}
-
-section[data-testid="stSidebar"] label,
-section[data-testid="stSidebar"] .stSelectbox label,
-section[data-testid="stSidebar"] .stRadio label,
-section[data-testid="stSidebar"] .stSlider label,
-section[data-testid="stSidebar"] .stTextInput label {{
-    color: rgba(255,255,255,0.8) !important;
-    font-size: 0.8rem !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.3px;
-}}
-
-section[data-testid="stSidebar"] .stRadio > div {{
-    gap: 0.1rem;
-}}
-
-section[data-testid="stSidebar"] .stRadio > div > label {{
-    background: rgba(255,255,255,0.05);
-    border-radius: 6px;
-    padding: 0.55rem 0.75rem !important;
-    margin-bottom: 0.2rem;
-    transition: background 0.15s ease;
-    color: rgba(255,255,255,0.85) !important;
-    font-size: 0.875rem !important;
-    font-weight: 400 !important;
-}}
-
-section[data-testid="stSidebar"] .stRadio > div > label:hover {{
-    background: rgba(255,204,0,0.12);
-    color: {COLOR_WHITE} !important;
-}}
-
-section[data-testid="stSidebar"] hr {{
-    border-color: rgba(255,255,255,0.1);
-    margin: 1rem 0;
-}}
-
-/* ── Streamlit Tabs ──────────────────────────────────────────── */
-.stTabs [data-baseweb="tab-list"] {{
-    background: {COLOR_CARD_BG};
-    border-radius: 8px 8px 0 0;
-    border-bottom: 2px solid #E2E8F0;
-    gap: 0;
-    padding: 0 0.25rem;
-}}
-
-.stTabs [data-baseweb="tab"] {{
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 0.875rem;
-    color: #64748B;
-    padding: 0.75rem 1.25rem;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
-}}
-
-.stTabs [aria-selected="true"] {{
-    color: {COLOR_PRIMARY} !important;
-    border-bottom-color: {COLOR_ACCENT} !important;
-    background: transparent !important;
-}}
-
-.stTabs [data-baseweb="tab-panel"] {{
-    background: {COLOR_CARD_BG};
-    border-radius: 0 0 8px 8px;
-    padding: 1.25rem;
-    border: 1px solid #E2E8F0;
-    border-top: none;
-}}
-
-/* ── Streamlit Metrics ───────────────────────────────────────── */
-[data-testid="metric-container"] {{
-    background: {COLOR_CARD_BG};
-    border: 1px solid #E2E8F0;
-    border-radius: 8px;
-    padding: 1rem 1.25rem;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-}}
-
-[data-testid="metric-container"] [data-testid="stMetricLabel"] {{
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #64748B;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}}
-
-[data-testid="metric-container"] [data-testid="stMetricValue"] {{
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: {COLOR_DARK_TEXT};
-}}
-
-/* ── Streamlit Buttons ───────────────────────────────────────── */
 .stButton > button[kind="primary"] {{
-    background: {COLOR_PRIMARY};
+    background: {COLOR_SECONDARY};
     color: {COLOR_WHITE};
     border: none;
-    border-radius: 6px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 0.875rem;
-    padding: 0.6rem 1.5rem;
-    transition: background 0.2s ease, transform 0.1s ease;
+    border-radius: 8px;
+    font-weight: 700;
 }}
 
 .stButton > button[kind="primary"]:hover {{
-    background: #003A72;
-    transform: translateY(-1px);
+    background: #005ad0;
 }}
 
-.stButton > button:not([kind="primary"]) {{
-    border-radius: 6px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 500;
+.login-shell {{
+    max-width: 520px;
+    margin: 6rem auto 0 auto;
+    background: #ffffff;
+    border: 1px solid #dce2ea;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 12px 36px rgba(0, 24, 54, 0.08);
 }}
 
-/* ── Download buttons ────────────────────────────────────────── */
-.stDownloadButton > button {{
-    background: {COLOR_CARD_BG};
-    color: {COLOR_PRIMARY};
-    border: 1.5px solid {COLOR_PRIMARY};
-    border-radius: 6px;
-    font-family: 'Inter', sans-serif;
+.login-title {{
+    font-family: 'Montserrat', sans-serif;
+    color: #001836;
+    font-size: 1.6rem;
+    margin: 0;
+}}
+
+.login-sub {{
+    color: #6b7280;
+    margin-top: 0.45rem;
+    margin-bottom: 1.1rem;
+    font-size: 0.92rem;
+}}
+
+.user-chip {{
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #eef4ff;
+    color: #0b1f42;
+    border: 1px solid #dbeafe;
+    border-radius: 999px;
+    padding: 0.25rem 0.55rem;
+    font-size: 0.72rem;
     font-weight: 600;
-    transition: all 0.2s ease;
-}}
-.stDownloadButton > button:hover {{
-    background: {COLOR_PRIMARY};
-    color: {COLOR_WHITE};
 }}
 
-/* ── Dataframe / Tables ──────────────────────────────────────── */
-[data-testid="stDataFrame"] {{
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid #E2E8F0;
-}}
-
-/* ── Selectbox & Inputs ──────────────────────────────────────── */
-.stSelectbox [data-baseweb="select"] > div:first-child {{
-    border-radius: 6px;
-    border-color: #CBD5E0;
-    font-size: 0.875rem;
-}}
-
-.stTextInput input {{
-    border-radius: 6px;
-    border-color: #CBD5E0;
-    font-size: 0.875rem;
-}}
-
-/* ── Scrollbar ───────────────────────────────────────────────── */
-::-webkit-scrollbar {{ width: 6px; height: 6px; }}
-::-webkit-scrollbar-track {{ background: #F1F5F9; }}
-::-webkit-scrollbar-thumb {{ background: #94A3B8; border-radius: 3px; }}
-::-webkit-scrollbar-thumb:hover {{ background: {COLOR_PRIMARY}; }}
-
-/* ── Info / Warning / Error boxes ───────────────────────────── */
-.stAlert {{
-    border-radius: 6px;
-    font-size: 0.875rem;
+.user-avatar-fallback {{
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: #002d5a;
+    color: #fff;
+    font-size: 0.74rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #e5e7eb;
 }}
 </style>
 """
 
 
-def inject_brand():
-    """Inject brand CSS into Streamlit app."""
-    import streamlit as st
+def inject_brand() -> None:
     st.markdown(BRAND_CSS, unsafe_allow_html=True)
 
 
-def render_header(title: str, subtitle: str):
-    """Render the dashboard header."""
-    import streamlit as st
-    st.markdown(f"""
-    <div class="dashboard-header">
-        <h1>📦 {title}</h1>
-        <p>{subtitle}</p>
-    </div>
-    """, unsafe_allow_html=True)
+def render_login_gate(auth_url: Optional[str], auth_error: Optional[str] = None) -> None:
+    st.markdown(
+        """
+        <div class="login-shell">
+            <h1 class="login-title">Inventory Control</h1>
+            <p class="login-sub">Inicia sesion con Google para acceder al dashboard de inventario.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    if auth_error:
+        st.error(auth_error)
+
+    if auth_url:
+        st.link_button("Entrar con Google", auth_url, use_container_width=True)
+    else:
+        st.error("No se pudo construir la URL de autenticacion de Supabase.")
 
 
-def render_section_header(title: str):
-    """Render a section divider."""
-    import streamlit as st
+def _user_initial(user: Dict[str, Any]) -> str:
+    name = (user.get("name") or user.get("email") or "U").strip()
+    return name[:1].upper() if name else "U"
+
+
+def render_topbar(user: Dict[str, Any]) -> bool:
+    now_label = datetime.now().strftime("%d %b %Y, %H:%M")
+
+    st.markdown('<div class="topbar-shell">', unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([6.5, 1.8, 1.7])
+
+    with col1:
+        st.markdown('<p class="topbar-title">Sentinel Risk Advisor</p>', unsafe_allow_html=True)
+        st.markdown(f'<p class="topbar-sub">Ultima sincronizacion: {now_label}</p>', unsafe_allow_html=True)
+
+    with col2:
+        logout = st.button("Cerrar sesion", key="top_logout", use_container_width=True)
+
+    with col3:
+        avatar = user.get("avatar_url")
+        if avatar:
+            st.image(avatar, width=34)
+        else:
+            st.markdown(
+                f'<div class="user-avatar-fallback">{_user_initial(user)}</div>',
+                unsafe_allow_html=True,
+            )
+        label = user.get("name") or user.get("email") or "Usuario"
+        st.caption(label)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+    return logout
+
+
+def render_header(title: str, subtitle: str) -> None:
+    st.markdown(
+        f"""
+        <div class="dashboard-header">
+            <h1>{title}</h1>
+            <p>{subtitle}</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_section_header(title: str) -> None:
     st.markdown(f'<div class="section-header">{title}</div>', unsafe_allow_html=True)

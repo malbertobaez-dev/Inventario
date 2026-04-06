@@ -21,6 +21,12 @@ DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 GOOGLE_SHEETS_ENABLED = os.getenv("GOOGLE_SHEETS_ENABLED", "false").lower() == "true"
 GOOGLE_SHEET_NAME = os.getenv("GOOGLE_SHEET_NAME", "Inventario_Backup")
 
+# Supabase Auth
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "")
+APP_URL = os.getenv("APP_URL", "http://localhost:8501")
+SUPABASE_REDIRECT_URL = os.getenv("SUPABASE_REDIRECT_URL", APP_URL)
+
 # ── Brand Colors ───────────────────────────────────────────────────
 COLOR_PRIMARY = "#002D5A"       # Deep Blue
 COLOR_SECONDARY = "#007BFF"     # Electric Blue
